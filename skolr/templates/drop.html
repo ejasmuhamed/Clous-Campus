@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+       <!-- Main Content -->
+      <div id="content">
+
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Drop Down Test</h1>
+            
+          </div>
+
+          <!-- Content Row -->
+          <div class="row">
+
+            
+
+                      <div class="col-xl-5 col-lg-5 col-md-10 col-sm-10 col-10">
+                            <div class="card">
+                              <h5 class="card-header"></h5>
+                              <div class="card-body">
+                                <form method="post" action="">
+                                {% csrf_token %}
+                                  <div class="form-group">
+                                    <label for="exampleInputCategory"> From Year</label>          
+                                    <select class="form-control" id="course" onchange="semview()">
+                                        <option hidden disabled selected></option>
+                                        {% for course in courses %}
+                                        <option value="{{ course.id }}">{{ course.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="exampleInputCategory"> To Year</label>
+                                    <select class="form-control" id="semester">
+                                            <option hidden disabled selected></option>
+                                    </select>
+                                                
+                                  </div>
+                            <!-- /.box-body -->
+                                  <div class="box-footer">
+                                    {% if not academic_year_to_edit %}
+                                    <button type="submit" class="btn btn-primary" name="submit">Add</button>
+                                    {% endif %}
+                                    {% if academic_year_to_edit %}
+                                    <button type="submit" class="btn btn-primary" name="submit">Edit</button>
+                                    <a class="btn btn-secondary" href="{% url 'academicyear' %}">Cancel</a>
+                                    {% endif %}
+                                  </div>
+                         
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+
+          </div>
+
+        
+
+        </div>
+        <!-- /.container-fluid -->
+
+ </div>
+      <!-- End of Main Content -->
+      </div>
+<script>
+    function semview(){
+        
+        var sem=document.getElementById("semester")
+        var crs=document.getElementById("course").value;
+        for(i = sem.options.length - 1 ; i >= 0 ; i--){
+            sem.remove(i);
+        }
+        {% for semester in semesters %}
+            
+            if( crs == {{ semester.course.id }}){
+                sem.add(new Option("{{semester.name}}","{{semester.id}}"))
+            }
+        {% endfor %}
+    }
+</script>
+
+ {% endblock %}

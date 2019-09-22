@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+       <!-- Main Content -->
+      <div id="content">
+
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+            
+          </div>
+
+          <!-- Content Row -->
+          <div class="row">
+
+            <div class="col-xl-7 col-lg-7 col-md-14 col-sm-14 col-14">
+                            <div class="card shadow mb-1">
+                            <div class="card-header py-3">
+                              <h6 class="m-0 font-weight-bold text-primary">Courses</h6>
+                            </div>
+                            <div class="card-body">
+                              <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr align="center">
+                                        <th>Course Code</th>
+                                        <th>Name</th>
+                                        <th>Department</th>
+                                        <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    
+                                    <tbody>
+                                        {% for course in courses %}
+                                        <tr align="center">
+                                        <td>{{ course.c_id }}</td>
+                                        <td>{{ course.name }}</td>
+                                        <td>{{ course.department.name }} </td>
+                                        <td> 
+                                            <a href="{% url 'course_edit' course.id %}"> <i class="fas fa-edit"></i> </a>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a href="Delete" data-toggle="modal" data-target="#coursedeleteModal-{{course.id}}"> <i class="fas fa-trash"> </i> </a>
+                                        </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    </table>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+
+
+                      <div class="col-xl-5 col-lg-5 col-md-10 col-sm-10 col-10">
+                            <div class="card">
+                              <h5 class="card-header">Add Course</h5>
+                              <div class="card-body">
+                                <form method="post" action="">
+                                {% csrf_token %}
+                                  <div class="form-group">
+                                    
+                                    <label for="exampleInputCategory"> Department</label>      
+                                      <select name="dept_id" class="form-control" required>
+                                          <option></option>
+                                        {% for department in departments %}
+                                          <option value={{ department.id }} {% if department.id == course_to_edit.department.id %} selected {% endif %}>{{ department.name }}</option>
+                                        {% endfor %}
+                                      </select><br>
+                                    <label for="exampleInputCategory"> Course</label>          
+                                    <input type="text" class="form-control" name="name" placeholder="eg: Computer Applications" value="{{ course_to_edit.name }}" required><br>
+                                    <label for="exampleInputCategory"> Code</label>
+                                    <input type="text" class="form-control" name="code" placeholder="eg: CA01" value="{{ course_to_edit.c_id }}" required>
+                                    
+                                  </div>
+                            <!-- /.box-body -->
+                                  <div class="box-footer">
+                                    {% if not course_to_edit %}
+                                    <button type="submit" class="btn btn-primary" name="submit">Add</button>
+                                    {% endif %}
+                                    {% if course_to_edit %}
+                                    <button type="submit" class="btn btn-primary" name="submit">Edit</button>
+                                    <a class="btn btn-secondary" href="{% url 'course' %}">Cancel</a>
+                                    {% endif %}
+                                  </div>
+                         
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+
+          </div>
+
+        
+
+        </div>
+        <!-- /.container-fluid -->
+
+ </div>
+      <!-- End of Main Content -->
+      </div>
+
+{% for course in courses %}
+<!-- Dept Delete Modal-->
+<div class="modal fade" id="coursedeleteModal-{{ course.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Do you want to Delete to Delete?</h5>
+      <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body">Deletion is an irreversible action! Do you want to delete?</div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" type="button" data-dismiss="modal">Don't Delete</button>
+      <a class="btn btn-primary" href="{% url 'course_delete' course.id %}">Delete</a>
+    </div>
+  </div>
+</div>
+</div>
+{% endfor %}
+
+ {% endblock %}
